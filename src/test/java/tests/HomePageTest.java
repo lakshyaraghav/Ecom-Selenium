@@ -121,6 +121,7 @@ public class HomePageTest extends BaseTest {
         System.out.println(valueProductInner);
         Assert.assertEquals(valueExTax,valueProductInner);
         System.out.println("demo");
+        System.out.println("demo2");
 
     }
 
