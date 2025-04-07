@@ -120,6 +120,7 @@ public class HomePageTest extends BaseTest {
         String valueProductInner=(productInner.replaceAll("[^0-9.]", ""));
         System.out.println(valueProductInner);
         Assert.assertEquals(valueExTax,valueProductInner);
+        System.out.println("lakshya");
 
 
 
