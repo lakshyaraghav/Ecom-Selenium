@@ -2,6 +2,9 @@ package base;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -16,15 +19,25 @@ public class BaseTest {
     public WebDriver driver;
     public static Properties prop= new Properties();
 
-    @BeforeClass
-    public void setup() {
+    public WebDriver initalizeBrowserAndOpenApp(String browserName) {
 
-        driver = new ChromeDriver();
+        if(browserName.equals("chrome")){
+            driver = new ChromeDriver();
+        } else if (browserName.equals("firefox")) {
+            driver = new FirefoxDriver();
+        } else if (browserName.equals("edge")) {
+            driver= new EdgeDriver();
+        } else if (browserName.equals("safari")) {
+            driver= new SafariDriver();
+        }
+
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
         driver.manage().window().maximize();
         driver.get("https://awesomeqa.com/ui/");
+        return driver;
     }
+
     public void loadPropertiesFile(){
 
 

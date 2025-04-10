@@ -21,13 +21,14 @@ import java.util.List;
 public class HomePageTest extends BaseTest {
 
     @BeforeClass
-    public void login(){
-//        WebDriver driver;
+    public void setup(){
+        loadPropertiesFile();
+        driver=initalizeBrowserAndOpenApp("chrome");
         LoginTest login= new LoginTest();
         login.driver=this.driver;
         login.loginTest();
-
     }
+
 
     @Test
     public void openAndVerifyHomepage(){

@@ -3,9 +3,17 @@ package tests;
 import base.BaseTest;
 import org.openqa.selenium.By;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class RegisterTest extends BaseTest {
+
+    @BeforeMethod
+    public void setup(){
+        loadPropertiesFile();
+        driver=initalizeBrowserAndOpenApp("chrome");
+    }
+
 
     @Test
     public void registerTest(){

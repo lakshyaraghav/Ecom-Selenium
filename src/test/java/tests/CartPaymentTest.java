@@ -17,15 +17,15 @@ import java.util.List;
 
 public class CartPaymentTest extends BaseTest {
     @BeforeClass
-    public void login() throws InterruptedException {
-//        WebDriver driver;
-        LoginTest login = new LoginTest();
-        login.driver = this.driver;
+    public void setup() throws InterruptedException{
+        loadPropertiesFile();
+        driver=initalizeBrowserAndOpenApp("chrome");
+        LoginTest login= new LoginTest();
+        login.driver=this.driver;
         login.loginTest();
         Thread.sleep(Duration.ofSeconds(2));
-        loadPropertiesFile();
-
     }
+
 
     @Test
     public void addToCartProduct() throws InterruptedException {
