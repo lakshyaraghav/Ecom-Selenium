@@ -5,6 +5,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -34,7 +35,7 @@ public class BaseTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
         driver.manage().window().maximize();
-        driver.get("https://awesomeqa.com/ui/");
+        driver.get(prop.getProperty("appUrl"));
         return driver;
     }
 
@@ -55,7 +56,7 @@ public class BaseTest {
 
     }
 
-//    @AfterMethod
+//    @AfterClass
 //    public void teardown() {
 //        if (driver != null) {
 //            driver.quit();

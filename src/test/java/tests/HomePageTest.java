@@ -23,7 +23,7 @@ public class HomePageTest extends BaseTest {
     @BeforeClass
     public void setup(){
         loadPropertiesFile();
-        driver=initalizeBrowserAndOpenApp("chrome");
+        driver=initalizeBrowserAndOpenApp("safari");
         LoginTest login= new LoginTest();
         login.driver=this.driver;
         login.loginTest();

@@ -1,30 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="All Test Suite">
-    <test verbose="2" preserve-order="true" name="/Users/lakshya/IdeaProjects/Ecom-automation">
+
+<suite name="CrossBrowserSuite" >
+    <test name="ChromeTest">
+    <parameter name="browser" value="chrome"/>
         <classes>
-            <class name="tests.HomePageTest">
-                <methods>
-                    <include name="openAndVerifyHomepage"/>
-                    <include name="CheckNavElements"/>
-                    <include name="sliderCheck"/>
-                    <include name="OpenProductPageCheck"/>
-                    <include name="searchCheck"/>
-                    <include name="compare"/>
-                </methods>
-            </class>
-            <class name="tests.CartPaymentTest">
-                <methods>
-                    <include name="addToCartProduct"/>
-                    <include name="fillDetails"/>
-                    <include name="paymentMethod"/>
-                </methods>
-            </class>
-            <class name="tests.RegisterTest">
-                <methods>
-                    <include name="registerTest"/>
-                </methods>
-            </class>
+            <class name="tests.CartPaymentTest"/>
         </classes>
     </test>
+<!--    <test name="SafariTest">-->
+<!--        <parameter name="browser" value="safari"/>-->
+<!--        <classes>-->
+<!--            <class name="tests.CartPaymentTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+
+<!--    fix krna hai safari ka-->
 </suite>
+
+
+
+<!--<suite name="All Test Suite">-->
+<!--    <test verbose="2" preserve-order="true" name="/Users/lakshya/IdeaProjects/Ecom-automation">-->
+<!--        <classes>-->
+<!--            <class name="tests.HomePageTest">-->
+<!--                <methods>-->
+<!--                    <include name="openAndVerifyHomepage"/>-->
+<!--                    <include name="CheckNavElements"/>-->
+<!--                    <include name="sliderCheck"/>-->
+<!--                    <include name="OpenProductPageCheck"/>-->
+<!--                    <include name="searchCheck"/>-->
+<!--                    <include name="compare"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--            <class name="tests.CartPaymentTest">-->
+<!--                <methods>-->
+<!--                    <include name="addToCartProduct"/>-->
+<!--                    <include name="fillDetails"/>-->
+<!--                    <include name="paymentMethod"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--            <class name="tests.RegisterTest">-->
+<!--                <methods>-->
+<!--                    <include name="registerTest"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--</suite>-->
