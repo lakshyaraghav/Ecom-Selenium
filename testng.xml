@@ -2,10 +2,13 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
 <suite name="CrossBrowserSuite" >
-    <test name="ChromeTest">
     <parameter name="browser" value="chrome"/>
+    <test name="MyTest">
         <classes>
             <class name="tests.CartPaymentTest"/>
+            <class name="tests.LoginTest"/>
+            <class name="tests.RegisterTest"/>
+            <class name="tests.HomePageTest"/>
         </classes>
     </test>
 <!--    <test name="SafariTest">-->

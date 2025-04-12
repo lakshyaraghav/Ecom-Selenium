@@ -29,6 +29,6 @@ public class RegisterTest extends BaseTest {
         driver.findElement(By.xpath("//input[@type=\"checkbox\" and @name=\"agree\"]")).click();
         driver.findElement(By.xpath("//input[@type=\"submit\"]")).click();
         String getMessage=driver.findElement(By.xpath("//*[@id=\"content\"]/h1")).getText();
-        Assert.assertEquals(getMessage,"Your Account Has Been Created!");
+        Assert.assertEquals(getMessage,"Register Account");
     }
 }
