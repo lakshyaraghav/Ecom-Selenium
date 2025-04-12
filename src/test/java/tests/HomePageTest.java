@@ -9,10 +9,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import javax.swing.*;
 import java.time.Duration;
@@ -21,9 +18,10 @@ import java.util.List;
 public class HomePageTest extends BaseTest {
 
     @BeforeClass
-    public void setup(){
+    @Parameters("browser")
+    public void setup(@Optional("chrome")String browserName){
         loadPropertiesFile();
-        driver=initalizeBrowserAndOpenApp("safari");
+        driver=initalizeBrowserAndOpenApp(browserName);
         LoginTest login= new LoginTest();
         login.driver=this.driver;
         login.loginTest();
@@ -182,7 +180,7 @@ public class HomePageTest extends BaseTest {
         driver.findElement(removeButton).click();
 
 // Wait for a short time to let the DOM update
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(removeButton));
 
 // Verify that the element is removed

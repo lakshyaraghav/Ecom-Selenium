@@ -14,9 +14,10 @@ import java.time.Duration;
 
 public class LoginTest extends BaseTest{
 //    WebDriver driver;
-    @Parameters("browser")
+
     @BeforeClass
-    public void setup(String browserName){
+    @Parameters("browser")
+    public void setup(@Optional("chrome")String browserName){
         loadPropertiesFile();
         driver=initalizeBrowserAndOpenApp(browserName);
     }

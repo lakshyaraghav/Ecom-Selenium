@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public class CartPaymentTest extends BaseTest {
     @BeforeClass
     @Parameters("browser")
-    public void setup(String browserName) throws InterruptedException{
+    public void setup(@Optional("chrome")String browserName) throws InterruptedException{
         loadPropertiesFile();
         driver=initalizeBrowserAndOpenApp(browserName);
         LoginTest login= new LoginTest();
