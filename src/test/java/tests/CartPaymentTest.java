@@ -1,10 +1,7 @@
 package tests;
 
 import base.BaseTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -26,7 +23,7 @@ public class CartPaymentTest extends BaseTest {
         LoginTest login= new LoginTest();
         login.driver=this.driver;
         login.loginTest();
-        Thread.sleep(Duration.ofSeconds(2));
+        Thread.sleep(Duration.ofSeconds(1));
     }
 
 
@@ -89,16 +86,17 @@ public class CartPaymentTest extends BaseTest {
 
             driver.findElement(By.id("button-payment-address")).click();
         }
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(2));
+
+
         driver.findElement(By.xpath("//textarea[@name=\"comment\"]")).sendKeys("Test Order");
-        driver.findElement(By.xpath("//input[@type=\"checkbox\" and @name=\"agree\"]")).click();
-        driver.findElement(By.id("button-payment-method")).click();
+
+        WebElement agreeCheckBox= wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@type=\"checkbox\" and @name=\"agree\"]")));
+        agreeCheckBox.click();
+        WebElement continueButton= wait.until(ExpectedConditions.elementToBeClickable(By.id("button-payment-method")));
+        continueButton.click();
+
 
     }
 
-//    @Test
-//    public void paymentMethod(){
-//        driver.findElement(By.xpath("//textarea[@name=\"comment\"]")).sendKeys("Test Order");
-//        driver.findElement(By.xpath("//input[@type=\"checkbox\" and @name=\"agree\"]")).click();
-//        driver.findElement(By.id("button-payment-method")).click();
-//    }
 }
