@@ -1,15 +1,14 @@
 package tests;
 
 import base.BaseTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
@@ -17,19 +16,20 @@ import java.util.List;
 
 public class CartPaymentTest extends BaseTest {
     @BeforeClass
-    public void login() throws InterruptedException {
-//        WebDriver driver;
-        LoginTest login = new LoginTest();
-        login.driver = this.driver;
-        login.loginTest();
-        Thread.sleep(Duration.ofSeconds(2));
+    @Parameters("browser")
+    public void setup(@Optional("chrome")String browserName) throws InterruptedException{
         loadPropertiesFile();
-
+        driver=initalizeBrowserAndOpenApp(browserName);
+        LoginTest login= new LoginTest();
+        login.driver=this.driver;
+        login.loginTest();
+        Thread.sleep(Duration.ofSeconds(1));
     }
+
 
     @Test
     public void addToCartProduct() throws InterruptedException {
-        driver.findElement(By.xpath("//div[@id=\"logo\"]/a")).click();
+//        driver.findElement(By.xpath("//div[@id=\"logo\"]/a")).click();
 
         WebElement product1 = driver.findElement(By.xpath("//*[@id=\"content\"]/div[2]/div[1]/div/div[1]/a"));
         JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -86,14 +86,17 @@ public class CartPaymentTest extends BaseTest {
 
             driver.findElement(By.id("button-payment-address")).click();
         }
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(2));
 
 
-    }
-
-    @Test
-    public void paymentMethod(){
         driver.findElement(By.xpath("//textarea[@name=\"comment\"]")).sendKeys("Test Order");
-        driver.findElement(By.xpath("//input[@type=\"checkbox\" and @name=\"agree\"]")).click();
-        driver.findElement(By.id("button-payment-method")).click();
+
+        WebElement agreeCheckBox= wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@type=\"checkbox\" and @name=\"agree\"]")));
+        agreeCheckBox.click();
+        WebElement continueButton= wait.until(ExpectedConditions.elementToBeClickable(By.id("button-payment-method")));
+        continueButton.click();
+
+
     }
+
 }
