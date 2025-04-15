@@ -2,6 +2,7 @@ package base;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
@@ -22,9 +23,19 @@ public class BaseTest {
 
     public WebDriver initalizeBrowserAndOpenApp(String browserName) {
 
-        if(browserName.equals("chrome")){
-            driver = new ChromeDriver();
-        } else if (browserName.equals("firefox")) {
+        if (browserName.equalsIgnoreCase("chrome")) {
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless=new"); // ✅ new headless mode (since Chrome 109+)
+            options.addArguments("--disable-gpu");
+            options.addArguments("--window-size=1920,1080");
+
+            driver = new ChromeDriver(options);
+        }
+//        or
+//        if (browserName.equals("chrome")) {
+//            driver = new ChromeDriver();
+//        }
+        else if (browserName.equals("firefox")) {
             driver = new FirefoxDriver();
         } else if (browserName.equals("edge")) {
             driver= new EdgeDriver();
