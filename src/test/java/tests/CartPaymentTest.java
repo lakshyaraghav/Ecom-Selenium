@@ -53,18 +53,29 @@ public class CartPaymentTest extends BaseTest {
         Assert.assertTrue(successMsg.contains("Success: You have added"), "Expected success message not found!");
         Thread.sleep(Duration.ofSeconds(2));
         driver.findElement(By.xpath("//a[@title='Shopping Cart']")).click();
-        driver.findElement(By.xpath("//a[text()=\"Checkout\"]")).click();
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement checkoutBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Checkout']")));
+
+// Scroll to the element (optional)
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", checkoutBtn);
+        Thread.sleep(500); // small delay to ensure scroll finishes
+
+// Click
+        checkoutBtn.click();
     }
 
     @Test
     public void fillDetails(){
+        WebDriverWait wait= new WebDriverWait(driver,Duration.ofSeconds(10));
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@name='payment_address' and @value='existing']")));
 
         List<WebElement> existingAddress = driver.findElements(By.xpath("//input[@name='payment_address' and @value='existing']"));
 
         if (!existingAddress.isEmpty()) {
             // Existing address option is present
-            existingAddress.get(0).click(); // select it (if needed)
-            driver.findElement(By.id("button-payment-address")).click();
+            existingAddress.getFirst().click(); // select it (if needed)
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("button-payment-address"))).click();
 
         } else {
             // No existing address, so fill in the new address details
@@ -84,12 +95,12 @@ public class CartPaymentTest extends BaseTest {
             Select select2 = new Select(dropdown2);
             select2.selectByVisibleText("Uttar Pradesh");
 
-            driver.findElement(By.id("button-payment-address")).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("button-payment-address"))).click();
         }
-        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(2));
+//        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(2));
 
 
-        driver.findElement(By.xpath("//textarea[@name=\"comment\"]")).sendKeys("Test Order");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@name='comment']"))).sendKeys("Test Order");
 
         WebElement agreeCheckBox= wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@type=\"checkbox\" and @name=\"agree\"]")));
         agreeCheckBox.click();
