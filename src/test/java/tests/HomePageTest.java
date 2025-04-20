@@ -1,10 +1,7 @@
 package tests;
 
 import base.BaseTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -19,22 +16,26 @@ public class HomePageTest extends BaseTest {
 
     @BeforeClass
     @Parameters("browser")
-    public void setup(@Optional("chrome")String browserName){
+    public void setup(@Optional("chrome")String browserName)throws InterruptedException{
         loadPropertiesFile();
         driver=initalizeBrowserAndOpenApp(browserName);
         LoginTest login= new LoginTest();
         login.driver=this.driver;
         login.loginTest();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='logo']/a")));
     }
 
 
     @Test
     public void openAndVerifyHomepage(){
-        driver.findElement(By.xpath("//div[@id=\"logo\"]/a")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement home = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='logo']/a")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", home); // <-- This solves the issue
 
-        String Eurl="https://awesomeqa.com/ui/index.php?route=common/home";
-        String Curl=driver.getCurrentUrl();
-        Assert.assertEquals(Curl,Eurl);
+        String expectedUrl = "https://awesomeqa.com/ui/index.php?route=common/home";
+        String actualUrl = driver.getCurrentUrl();
+        Assert.assertEquals(actualUrl, expectedUrl, "Homepage URL verification failed.");
     }
 
     @Test
@@ -83,46 +84,74 @@ public class HomePageTest extends BaseTest {
 
         String mac=driver.findElement(By.xpath("//li/a[text()='Mac (1)']")).getText();
         Assert.assertTrue(mac.contains("Mac"));
-        driver.findElement(By.xpath("//*[@id=\"logo\"]/a")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement home = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='logo']/a")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", home);
     }
 
     @Test
     public void sliderCheck() throws InterruptedException {
-        driver.findElement(By.xpath("//*[@id=\"logo\"]/a")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement home = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='logo']/a")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", home);
+
         WebElement slider=driver.findElement(By.xpath("//div[@id=\"slideshow0\"]/div[@class=\"swiper-wrapper\"]"));
-        JavascriptExecutor js = (JavascriptExecutor) driver;
         String initialTransform = slider.getAttribute("style");
 
         System.out.println("Initial Transform: " + initialTransform);
 
         Thread.sleep(Duration.ofSeconds(5));
 
-        String newTransform = slider.getAttribute("style");
+        WebElement sliderAfter = driver.findElement(By.xpath("//div[@id='slideshow0']/div[@class='swiper-wrapper']"));
+        String newTransform = sliderAfter.getAttribute("style");
 
         System.out.println("New Transform: " + newTransform);
         Assert.assertNotEquals(initialTransform, newTransform, "Slider is not moving automatically");
     }
 
     @Test
-    public void OpenProductPageCheck(){
-        driver.findElement(By.xpath("//div[@id=\"logo\"]/a")).click();
-        WebElement product1=driver.findElement(By.xpath("//*[@id=\"content\"]/div[2]/div[1]/div/div[1]/a"));
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].scrollIntoView(true);", product1);
-//        String productPriceIni=driver.findElement(By.xpath("//*[@id=\"content\"]/div[2]/div[1]/div/div[2]/p[2]/text()")).getText();
-        String ExTax=driver.findElement(By.xpath("//*[@id=\"content\"]/div[2]/div[1]/div/div[2]/p[2]/span")).getText();
-        String valueExTax=(ExTax.replaceAll("[^0-9.]", ""));
+    public void OpenProductPageCheck() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        product1.click();
+        // Go to home page
+        WebElement home = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#logo a")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", home);
 
-        String productInner= driver.findElement(By.xpath("//*[@id=\"content\"]/div/div[2]/ul[2]/li[2]")).getText();
-        String valueProductInner=(productInner.replaceAll("[^0-9.]", ""));
-        System.out.println(valueProductInner);
-        Assert.assertEquals(valueExTax,valueProductInner);
-        System.out.println("Pull request change");
+        // Wait for product section to load
+        WebElement firstProduct = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.cssSelector("div.product-thumb")
+        ));
 
+        // Scroll to first product
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", firstProduct);
 
+        // Get Ex Tax text
+        String exTax = driver.findElement(By.cssSelector("div.product-thumb .price-tax")).getText();  // e.g., "Ex Tax: $500.00"
+        String valueExTax = exTax.replaceAll("[^0-9.]", "");
 
+        // Click product
+        WebElement productLink = driver.findElement(By.cssSelector("div.product-thumb a"));
+        productLink.click();
+
+        // Wait for product detail page
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("content")));
+
+        // Wait for tax section inside product page
+        WebElement productInner = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.cssSelector("#content > div > div.col-sm-4 > ul:nth-child(4) > li:nth-child(2)")
+        ));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", productInner);
+        Thread.sleep(2000); // for Safari rendering
+
+        String productInnerText = productInner.getText();  // e.g., "Ex Tax: $500.00"
+        String valueProductInner = productInnerText.replaceAll("[^0-9.]", "");
+
+        System.out.println("Ex Tax: " + valueExTax);
+        System.out.println("Inner Product Text: " + valueProductInner);
+
+        Assert.assertEquals(valueExTax, valueProductInner);
+        System.out.println("Assertion Passed: Pull request change");
 
     }
 
@@ -130,7 +159,10 @@ public class HomePageTest extends BaseTest {
     public void searchCheck(){
         driver.findElement(By.xpath("//div[@id=\"search\"]/input")).sendKeys("Macbook");
         driver.findElement(By.xpath("//div[@id=\"search\"]/span/button")).click();
-        List<WebElement> productNames=driver.findElements(By.cssSelector(".product-thumb h4 a"));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".product-thumb h4 a")));
+
+        List<WebElement> productNames = driver.findElements(By.cssSelector(".product-thumb h4 a"));
 
         for (WebElement product:productNames){
             String productName= product.getText();
@@ -142,17 +174,32 @@ public class HomePageTest extends BaseTest {
 
     @Test
     public void compare() throws InterruptedException {
-        driver.findElement(By.xpath("//*[@id=\"logo\"]/a")).click();
-        driver.findElement(By.xpath("// button[@onclick=\"compare.add('43');\"]")).click();
-        driver.findElement(By.xpath("// button[@onclick=\"compare.add('40');\"]")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement logo = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='logo']/a")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", logo);
+        WebElement compare1 = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[onclick=\"compare.add('43');\"]")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", compare1);
+
+        Thread.sleep(1000);
+
+        WebElement compare2 = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[onclick=\"compare.add('40');\"]")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", compare2);
         Thread.sleep(2000);
         driver.findElement(By.xpath("//a[text()=\"product comparison\"]")).click();
-        String getFirstPrice=driver.findElement(By.xpath("//*[@id=\"content\"]/table/tbody[1]/tr[3]/td[2]")).getText();
-        String getSecondPrice=driver.findElement(By.xpath("//*[@id=\"content\"]/table/tbody[1]/tr[3]/td[3]")).getText();
-        int firstPrice=Integer.parseInt(getFirstPrice.replace("$","").split("\\.")[0]);
-        int secondPrice=Integer.parseInt(getSecondPrice.replace("$", "").split("\\.")[0]);
-//        System.out.println("First Price: " + firstPrice);
-//        System.out.println("Second Price: " + secondPrice);
+
+        WebElement firstPriceEl = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[@id='content']/table/tbody[1]/tr[3]/td[2]")));
+        WebElement secondPriceEl = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[@id='content']/table/tbody[1]/tr[3]/td[3]")));
+
+        String getFirstPrice = firstPriceEl.getText();
+        String getSecondPrice = secondPriceEl.getText();
+
+        int firstPrice = Integer.parseInt(getFirstPrice.replace("$", "").split("\\.")[0].trim());
+        int secondPrice = Integer.parseInt(getSecondPrice.replace("$", "").split("\\.")[0].trim());
+
+        System.out.println("First Price: " + firstPrice);
+        System.out.println("Second Price: " + secondPrice);
 
         if (firstPrice>secondPrice){
             System.out.println(firstPrice);
@@ -164,7 +211,9 @@ public class HomePageTest extends BaseTest {
 
     @Test
     public  void wishlistCheck() throws InterruptedException {
-        driver.findElement(By.xpath("//div[@id=\"logo\"]/a")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement logo = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='logo']/a")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", logo);
 
         driver.findElement(By.xpath("//button[@onclick=\"wishlist.add('43');\"]")).click();
         driver.findElement(By.xpath("//*[@id=\"wishlist-total\"]/span")).click();
@@ -180,7 +229,7 @@ public class HomePageTest extends BaseTest {
         driver.findElement(removeButton).click();
 
 // Wait for a short time to let the DOM update
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+
         wait.until(ExpectedConditions.invisibilityOfElementLocated(removeButton));
 
 // Verify that the element is removed

@@ -23,18 +23,18 @@ public class BaseTest {
 
     public WebDriver initalizeBrowserAndOpenApp(String browserName) {
 
-        if (browserName.equalsIgnoreCase("chrome")) {
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless=new"); // ✅ new headless mode (since Chrome 109+)
-            options.addArguments("--disable-gpu");
-            options.addArguments("--window-size=1920,1080");
-
-            driver = new ChromeDriver(options);
-        }
-//        or
-//        if (browserName.equals("chrome")) {
-//            driver = new ChromeDriver();
+//        if (browserName.equalsIgnoreCase("chrome")) {
+//            ChromeOptions options = new ChromeOptions();
+//            options.addArguments("--headless=new"); // ✅ new headless mode (since Chrome 109+)
+//            options.addArguments("--disable-gpu");
+//            options.addArguments("--window-size=1920,1080");
+//
+//            driver = new ChromeDriver(options);
 //        }
+//        or
+        if (browserName.equals("chrome")) {
+            driver = new ChromeDriver();
+        }
         else if (browserName.equals("safari")) {
             driver= new SafariDriver();
         } else if (browserName.equals("firefox")) {
@@ -67,11 +67,11 @@ public class BaseTest {
 
     }
 
-    @AfterClass
-    public void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
+//    @AfterClass
+//    public void teardown() {
+//        if (driver != null) {
+//            driver.quit();
+//        }
+//    }
 
 }
