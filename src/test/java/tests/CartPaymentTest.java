@@ -30,6 +30,9 @@ public class CartPaymentTest extends BaseTest {
     @Test
     public void addToCartProduct() throws InterruptedException {
 //        driver.findElement(By.xpath("//div[@id=\"logo\"]/a")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement home = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='logo']/a")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", home);
 
         WebElement product1 = driver.findElement(By.xpath("//*[@id=\"content\"]/div[2]/div[1]/div/div[1]/a"));
         JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -39,7 +42,7 @@ public class CartPaymentTest extends BaseTest {
         driver.findElement(By.xpath("//*[@id=\"content\"]/div[2]/div[1]/div/div[3]/button[1]")).click();
 
         // Wait for success message to be visible
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         WebElement msg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class,'alert-success')]")));
 
         // Scroll to message (optional)

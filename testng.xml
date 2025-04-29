@@ -3,21 +3,21 @@
 
 <suite name="CrossBrowserSuite" parallel="tests" thread-count="2" >
 
-<!--    <test name="ChromeTest">-->
-<!--        <parameter name="browser" value="chrome"/>-->
-<!--        <classes>-->
-<!--&lt;!&ndash;            <class name="tests.CartPaymentTest"/>&ndash;&gt;-->
-<!--&lt;!&ndash;            <class name="tests.LoginTest"/>&ndash;&gt;-->
-<!--&lt;!&ndash;            <class name="tests.RegisterTest"/>&ndash;&gt;-->
-<!--&lt;!&ndash;            <class name="tests.HomePageTest"/>&ndash;&gt;-->
-<!--        </classes>-->
-<!--    </test>-->
+    <test name="ChromeTest">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="tests.CartPaymentTest"/>
+            <class name="tests.LoginTest"/>
+            <class name="tests.RegisterTest"/>
+            <class name="tests.HomePageTest"/>
+        </classes>
+    </test>
     <test name="SafariTest">
         <parameter name="browser" value="safari"/>
         <classes>
-<!--            <class name="tests.CartPaymentTest"/>-->
-<!--            <class name="tests.LoginTest"/>-->
-<!--            <class name="tests.RegisterTest"/>-->
+            <class name="tests.CartPaymentTest"/>
+            <class name="tests.LoginTest"/>
+            <class name="tests.RegisterTest"/>
             <class name="tests.HomePageTest"/>
         </classes>
     </test>
