@@ -2,11 +2,22 @@ package pageObject;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+
+import java.time.Duration;
 
 public class RegisterPage {
 
-    public RegisterPage(WebDriver driver){
+    WebDriver driver;
+    WebDriverWait wait;
 
+    public RegisterPage(WebDriver driver){
+        this.driver=driver;
+        this.wait= new WebDriverWait(driver,Duration.ofSeconds(10));
     }
 
     By myAccount= By.xpath("//a[@title='My Account']");
@@ -21,6 +32,29 @@ public class RegisterPage {
     By check2= By.xpath("//input[@type=\"checkbox\" and @name=\"agree\"]");
     By submitButton= By.xpath("//input[@type=\"submit\"]");
     By registerMsg=By.xpath("//*[@id=\"content\"]/h1");
+
+    public void performRegister(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.findElement(myAccount).click();
+        driver.findElement(register).click();
+
+        WebElement firstNam= wait.until(ExpectedConditions.visibilityOfElementLocated(firstName));
+        firstNam.sendKeys("Lakshya");
+//        driver.findElement(By.id("input-firstname")).sendKeys("Lakshya");
+        driver.findElement(lastName).sendKeys("Raghav");
+        driver.findElement(emailInput).sendKeys("testlux1@gmail.com");
+        driver.findElement(telephoneInput).sendKeys("9810101927");
+        driver.findElement(passwordInput).sendKeys("12345678");
+        driver.findElement(passwordConfirm).sendKeys("12345678");
+        driver.findElement(check1).click();
+        driver.findElement(check2).click();
+        driver.findElement(submitButton).click();
+
+
+        WebElement msg= wait.until(ExpectedConditions.visibilityOfElementLocated(registerMsg));
+        String getMessage=msg.getText();
+        Assert.assertEquals(getMessage,"Register Account");
+    }
 
 
 }
